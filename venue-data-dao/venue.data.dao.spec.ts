@@ -1,16 +1,18 @@
 import {VenueDataDao} from "./venue.data.dao";
 import path from "path";
+import csv from "csvtojson";
 
 describe("Venue data dao", () => {
     let dao: VenueDataDao;
 
     beforeEach(() => {
-        dao = new VenueDataDao();
+        const filePath = path.resolve(__dirname, "../data/historical_data.csv");
+        dao = new VenueDataDao(csv().fromFile(filePath));
     });
 
-    test("Loads data from CSV", async () => {
-       await dao.loadFromFilePath(path.resolve(__dirname, "../data/historical_data.csv"));
-       expect(dao.listVenues().length > 0).toBe(true);
+    test("Lists venues", async () => {
+        const venues = await dao.listVenues();
+        expect(venues.length > 0).toBe(true);
     });
 
 })

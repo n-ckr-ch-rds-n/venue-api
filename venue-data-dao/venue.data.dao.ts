@@ -1,18 +1,12 @@
 import {Venue} from "./venue";
-import csv from "csvtojson";
+import {Converter} from "csvtojson/v2/Converter";
 
 export class VenueDataDao {
 
-    private venueData: Venue[] | undefined;
-
-    constructor() {
+    constructor(private data: Converter) {
     }
 
-    async loadFromFilePath(filePath: string): Promise<void> {
-        this.venueData = await csv().fromFile(filePath);
-    }
-
-    listVenues(): Venue[] {
-        return this.venueData || [];
+    async listVenues(): Promise<Venue[]> {
+        return await this.data || [];
     }
 }

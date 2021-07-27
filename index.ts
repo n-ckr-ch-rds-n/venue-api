@@ -1,7 +1,8 @@
 import express from "express";
 const app = express();
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+    await Promise.resolve();
     res.send("Hi friends!");
 })
 
