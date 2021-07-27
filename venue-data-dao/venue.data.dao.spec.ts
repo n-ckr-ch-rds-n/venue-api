@@ -7,7 +7,7 @@ describe("Venue data dao", () => {
 
     beforeEach(() => {
         const filePath = path.resolve(__dirname, "../data/historical_data.csv");
-        dao = new VenueDataDao(csv().fromFile(filePath));
+        dao = new VenueDataDao(csv(), filePath);
     });
 
     test("Lists venues", async () => {
