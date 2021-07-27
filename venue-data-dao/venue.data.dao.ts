@@ -9,6 +9,16 @@ export class VenueDataDao {
     }
 
     async listVenues(): Promise<Venue[]> {
+        return await this.loadVenueData();
+    }
+
+    async listSpacesByVenue(venue: string): Promise<string[]> {
+        return (await this.loadVenueData())
+            .filter(v => v.venue_name === venue)
+            .map(v => v.space_name);
+    }
+
+    private async loadVenueData(): Promise<Venue[]> {
         this.venueData = this.venueData || await this.converter.fromFile(this.filePath);
         return this.venueData;
     }

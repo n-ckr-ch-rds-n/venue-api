@@ -15,4 +15,9 @@ describe("Venue data dao", () => {
         expect(venues.length > 0).toBe(true);
     });
 
+    test("Lists spaces by venue", async () => {
+        const spaces = await dao.listSpacesByVenue("Fulham Palace");
+        expect(spaces.length > 0).toBe(true);
+    })
+
 })
