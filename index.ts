@@ -11,6 +11,12 @@ app.get("/", async (req, res) => {
     res.send(venues);
 })
 
+app.get("/spaces", async (req, res) => {
+    const spaces = await dao.listSpacesByVenue(req.query.venue as string);
+    res.send(spaces);
+})
+
+
 const port = process.env.port || 3000;
 
 app.listen(port, () => console.log(`App listening on port ${port}`));
