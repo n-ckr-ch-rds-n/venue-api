@@ -15,7 +15,8 @@ export class VenueDataDao {
     async listSpacesByVenue(venue: string): Promise<string[]> {
         return (await this.loadVenueData())
             .filter(v => v.venue_name === venue)
-            .map(v => v.space_name);
+            .map(v => v.space_name)
+            .filter((v, i, a) => i === a.indexOf(v));
     }
 
     private async loadVenueData(): Promise<Venue[]> {
