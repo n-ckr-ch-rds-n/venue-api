@@ -2,6 +2,7 @@ import {BookingDataDao} from "./booking.data.dao";
 import {Converter} from "csvtojson/v2/Converter";
 import {Booking} from "./booking";
 import {BookingStatus} from "./booking.status";
+import {Utils} from "../utils/utils";
 
 describe("Venue data dao", () => {
     let dao: BookingDataDao;
@@ -35,7 +36,7 @@ describe("Venue data dao", () => {
         mockConverter = {
             fromFile: async (filePath: string) => mockData
         } as any as Converter;
-        dao = new BookingDataDao(mockConverter, "foobar");
+        dao = new BookingDataDao(mockConverter, "foobar", new Utils());
     });
 
     test("Lists all venues", async () => {
