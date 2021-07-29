@@ -14,14 +14,12 @@ export class VenueDataDao {
     }
 
     async listSpacesByVenue(venue: string): Promise<string[]> {
-        return (await this.listBookingsByVenue(venue))
-            .map(v => v.space_name)
-            .filter((v, i, a) => i === a.indexOf(v));
+        return this.deDupe((await this.listBookingsByVenue(venue)).map(b => b.space_name))
     }
 
     async listBookings(request: FilterBookingsRequest): Promise<Booking[]> {
         return (await this.listBookingsByVenue(request.venue))
-            .filter(b => b.status.toLowerCase() === (request.status || b.status).toLowerCase())
+            .filter(b => this.stringEquals(b.status, (request.status || b.status)))
             .filter(b => {
                 const bookingDate = this.sanitiseDate(b.date);
                 return bookingDate === (this.sanitiseDate(request.date) || bookingDate);
@@ -30,7 +28,7 @@ export class VenueDataDao {
 
     private async listBookingsByVenue(venue?: string): Promise<Booking[]> {
         return (await this.loadBookingData())
-            .filter(v => v.venue_name.toLowerCase() === (venue || v.venue_name).toLowerCase());
+            .filter(b => this.stringEquals(b.venue_name, venue || b.venue_name))
     }
 
     private deDupe(values: string[]): string[] {
@@ -39,6 +37,10 @@ export class VenueDataDao {
 
     private sanitiseDate(date: string): number {
         return new Date(date).setHours(0, 0, 0, 0);
+    }
+
+    private stringEquals(string1: string, string2: string): boolean {
+        return string1.toLowerCase() === string2.toLowerCase();
     }
 
     private async loadBookingData(): Promise<Booking[]> {
