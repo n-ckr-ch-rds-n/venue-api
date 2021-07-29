@@ -8,8 +8,13 @@ import {FilterBookingsRequest} from "./venue-data-dao/filter.bookings.request";
 const app = express();
 const dao = new VenueDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"));
 
-app.get("/", async (req, res) => {
-    const venues = await dao.listBookingsByVenue(req.query.venue as string);
+// app.get("/", async (req, res) => {
+//     const venues = await dao.listBookingsByVenue(req.query.venue as string);
+//     res.send(venues);
+// })
+
+app.get("/venues", async (req, res) => {
+    const venues = await dao.listVenues();
     res.send(venues);
 })
 
@@ -20,7 +25,7 @@ app.get("/spaces", async (req, res) => {
 
 app.get("/bookings", async (req, res) => {
     const {status, venue, date} = req.query;
-    const bookings = await dao.listBookingsByStatus({status, venue, date} as FilterBookingsRequest);
+    const bookings = await dao.listBookings({status, venue, date} as FilterBookingsRequest);
     res.send(bookings);
 })
 
