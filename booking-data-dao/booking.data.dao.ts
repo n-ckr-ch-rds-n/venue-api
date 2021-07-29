@@ -23,7 +23,7 @@ export class BookingDataDao {
             .filter(b => this.dateEquals(b.date, request.date))
     }
 
-    private dateEquals(val1: string | number, val2: string | number): boolean {
+    private dateEquals(val1: any, val2: any): boolean {
         return this.sanitiseDate(val1) === this.sanitiseDate(val2);
     }
 

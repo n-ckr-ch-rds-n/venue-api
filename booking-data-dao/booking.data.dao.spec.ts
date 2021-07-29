@@ -53,10 +53,35 @@ describe("Venue data dao", () => {
        expect(spaces.includes(mockBooking2.space_name)).toBe(false);
        expect(spaces.includes(mockBookingWithDifferentSpace.space_name)).toBe(true);
     });
-    //
-    // test("Lists spaces by venue", async () => {
-    //     const spaces = await dao.listSpacesByVenue("Fulham Palace");
-    //     expect(spaces.length > 0).toBe(true);
-    // })
+
+    test("Lists all completed bookings for a venue", async () => {
+        const bookings = await dao.listBookings({
+            status: BookingStatus.Completed,
+            venue: mockBooking2.venue_name
+        });
+        expect(bookings.every(b => b.status === BookingStatus.Completed));
+        expect(bookings.every(b => b.venue_name === mockBooking2.venue_name));
+    });
+
+    test("Filters bookings by status", async () => {
+       const bookings = await dao.listBookings({status: BookingStatus.Pending});
+       expect(bookings.every(b => b.status === BookingStatus.Pending));
+    });
+
+    test("Filters bookings by venue", async () => {
+       const newVenue = "Kitten Palace";
+       mockData.push({...mockBooking2, venue_name: newVenue});
+       const bookings = await dao.listBookings({venue: newVenue});
+       expect(bookings.every(b => b.venue_name === newVenue));
+    });
+
+    test("Filters bookings by date", async () => {
+       const newDate = "4/25/2018";
+       mockData.push({...mockBooking2, date: newDate});
+       for (const date of [mockBooking1.date, newDate]) {
+           const bookings = await dao.listBookings({date});
+           expect(bookings.every(b => b.date === date));
+       }
+    });
 
 })
