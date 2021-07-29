@@ -1,4 +1,4 @@
-import {VenueStatus} from "./venue.status";
+import {BookingStatus} from "./booking.status";
 
 export interface Venue {
     date: string;
@@ -8,5 +8,5 @@ export interface Venue {
     guest_email: string;
     number_of_guests: number;
     price: string;
-    status: VenueStatus;
+    status: BookingStatus;
 }
