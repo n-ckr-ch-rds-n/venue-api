@@ -1,12 +1,11 @@
 import express from "express";
-import {VenueDataDao} from "./venue-data-dao/venue.data.dao";
+import {BookingDataDao} from "./booking-data-dao/booking.data.dao";
 import path from "path";
 import csv from "csvtojson";
-import {BookingStatus} from "./venue-data-dao/booking.status";
-import {FilterBookingsRequest} from "./venue-data-dao/filter.bookings.request";
+import {FilterBookingsRequest} from "./booking-data-dao/filter.bookings.request";
 
 const app = express();
-const dao = new VenueDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"));
+const dao = new BookingDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"));
 
 // app.get("/", async (req, res) => {
 //     const venues = await dao.listBookingsByVenue(req.query.venue as string);

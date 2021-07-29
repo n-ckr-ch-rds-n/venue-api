@@ -2,7 +2,7 @@ import {Booking} from "./booking";
 import {Converter} from "csvtojson/v2/Converter";
 import {FilterBookingsRequest} from "./filter.bookings.request";
 
-export class VenueDataDao {
+export class BookingDataDao {
 
     private bookingData: Booking[] | undefined;
 
@@ -20,10 +20,11 @@ export class VenueDataDao {
     async listBookings(request: FilterBookingsRequest): Promise<Booking[]> {
         return (await this.listBookingsByVenue(request.venue))
             .filter(b => this.stringEquals(b.status, (request.status || b.status)))
-            .filter(b => {
-                const bookingDate = this.sanitiseDate(b.date);
-                return bookingDate === (this.sanitiseDate(request.date) || bookingDate);
-            })
+            .filter(b => this.dateEquals(b.date, request.date))
+    }
+
+    private dateEquals(val1: string | number, val2: string | number): boolean {
+        return this.sanitiseDate(val1) === this.sanitiseDate(val2);
     }
 
     private async listBookingsByVenue(venue?: string): Promise<Booking[]> {
@@ -35,7 +36,7 @@ export class VenueDataDao {
         return values.filter((v, i, a) => i === a.indexOf(v));
     }
 
-    private sanitiseDate(date: string): number {
+    private sanitiseDate(date: string | number): number {
         return new Date(date).setHours(0, 0, 0, 0);
     }
 
