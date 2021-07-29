@@ -38,11 +38,20 @@ describe("Venue data dao", () => {
         dao = new BookingDataDao(mockConverter, "foobar");
     });
 
-    test("Lists venues", async () => {
+    test("Lists all venues", async () => {
         const venues = await dao.listVenues();
-        for (const name of [mockBooking1.venue_name, mockBooking2.venue_name]) {
-            expect(venues.includes(name)).toBe(true);
+        for (const booking of mockData) {
+            expect(venues.includes(booking.venue_name)).toBe(true);
         }
+    });
+
+    test("Lists all spaces for a venue", async () => {
+       const mockBookingWithDifferentSpace: Booking = {...mockBooking1, space_name: "Toroidal space"};
+       mockData.push(mockBookingWithDifferentSpace);
+       const spaces = await dao.listSpacesByVenue(mockBooking1.venue_name);
+       expect(spaces.includes(mockBooking1.space_name)).toBe(true);
+       expect(spaces.includes(mockBooking2.space_name)).toBe(false);
+       expect(spaces.includes(mockBookingWithDifferentSpace.space_name)).toBe(true);
     });
     //
     // test("Lists spaces by venue", async () => {
