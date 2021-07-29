@@ -1,6 +1,6 @@
 import {BookingStatus} from "./booking.status";
 
-export interface Venue {
+export interface Booking {
     date: string;
     venue_name: string;
     space_name: string;

@@ -9,7 +9,7 @@ const app = express();
 const dao = new VenueDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"));
 
 app.get("/", async (req, res) => {
-    const venues = await dao.listVenues(req.query.venue as string);
+    const venues = await dao.listBookingsByVenue(req.query.venue as string);
     res.send(venues);
 })
 
@@ -19,8 +19,8 @@ app.get("/spaces", async (req, res) => {
 })
 
 app.get("/bookings", async (req, res) => {
-    const {status, venue} = req.query;
-    const bookings = await dao.listBookingsByStatus({status, venue} as FilterBookingsRequest);
+    const {status, venue, date} = req.query;
+    const bookings = await dao.listBookingsByStatus({status, venue, date} as FilterBookingsRequest);
     res.send(bookings);
 })
 

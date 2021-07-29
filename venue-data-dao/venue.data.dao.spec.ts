@@ -11,7 +11,7 @@ describe("Venue data dao", () => {
     });
 
     test("Lists venues", async () => {
-        const venues = await dao.listVenues();
+        const venues = await dao.listBookingsByVenue();
         expect(venues.length > 0).toBe(true);
     });
 
