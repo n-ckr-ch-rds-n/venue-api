@@ -46,12 +46,13 @@ describe("Venue data dao", () => {
     });
 
     test("Lists all spaces for a venue", async () => {
-       const mockBookingWithDifferentSpace: Booking = {...mockBooking1, space_name: "Toroidal space"};
-       mockData.push(mockBookingWithDifferentSpace);
-       const spaces = await dao.listSpacesByVenue(mockBooking1.venue_name);
-       expect(spaces.includes(mockBooking1.space_name)).toBe(true);
-       expect(spaces.includes(mockBooking2.space_name)).toBe(false);
-       expect(spaces.includes(mockBookingWithDifferentSpace.space_name)).toBe(true);
+        const newSpace = {...mockBooking1, space_name: "Toroidal space"};
+        mockData.push(newSpace);
+        const spaces = await dao.listSpacesByVenue(mockBooking1.venue_name);
+        for (const name of [mockBooking1.space_name, newSpace.space_name]) {
+            expect(spaces.includes(name)).toBe(true);
+        }
+        expect(spaces.includes(mockBooking2.space_name)).toBe(false);
     });
 
     test("Lists all completed bookings for a venue", async () => {
@@ -64,24 +65,24 @@ describe("Venue data dao", () => {
     });
 
     test("Filters bookings by status", async () => {
-       const bookings = await dao.listBookings({status: BookingStatus.Pending});
-       expect(bookings.every(b => b.status === BookingStatus.Pending));
+        const bookings = await dao.listBookings({status: BookingStatus.Pending});
+        expect(bookings.every(b => b.status === BookingStatus.Pending));
     });
 
     test("Filters bookings by venue", async () => {
-       const newVenue = "Kitten Palace";
-       mockData.push({...mockBooking2, venue_name: newVenue});
-       const bookings = await dao.listBookings({venue: newVenue});
-       expect(bookings.every(b => b.venue_name === newVenue));
+        const newVenue = "Kitten Palace";
+        mockData.push({...mockBooking2, venue_name: newVenue});
+        const bookings = await dao.listBookings({venue: newVenue});
+        expect(bookings.every(b => b.venue_name === newVenue));
     });
 
     test("Filters bookings by date", async () => {
-       const newDate = "4/25/2018";
-       mockData.push({...mockBooking2, date: newDate});
-       for (const date of [mockBooking1.date, newDate]) {
-           const bookings = await dao.listBookings({date});
-           expect(bookings.every(b => b.date === date));
-       }
+        const newDate = "4/25/2018";
+        mockData.push({...mockBooking2, date: newDate});
+        for (const date of [mockBooking1.date, newDate]) {
+            const bookings = await dao.listBookings({date});
+            expect(bookings.every(b => b.date === date));
+        }
     });
 
 })
