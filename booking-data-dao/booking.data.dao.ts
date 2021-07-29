@@ -14,7 +14,7 @@ export class BookingDataDao {
         return this.utils.deDupe((await this.loadBookingData()).map(b => b.venue_name));
     }
 
-    async listSpacesByVenue(venue: string): Promise<string[]> {
+    async listSpacesByVenue(venue: string | undefined): Promise<string[]> {
         return this.utils.deDupe((await this.listBookingsByVenue(venue)).map(b => b.space_name))
     }
 
