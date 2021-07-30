@@ -4,10 +4,12 @@ import path from "path";
 import csv from "csvtojson";
 import {FilterBookingsRequest} from "./booking-data-dao/filter.bookings.request";
 import {Utils} from "./utils/utils";
+import {Validator} from "./validator/validator";
 
 const app = express();
 const dao = new BookingDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"), new Utils());
 const serverErrorMessage = "Internal server error";
+const badRequestMessage = "Bad request";
 
 app.get("/", async (req, res) => {
     try {
@@ -27,8 +29,12 @@ app.get("/venues", async (req, res) => {
 
 app.get("/spaces", async (req, res) => {
     try {
-        const venue = req.query.venue ? req.query.venue.toString() : undefined;
-        res.json(await dao.listSpacesByVenue(venue));
+        const venue = req.query.venue;
+        if (Validator.isStringOrUndefined(venue)) {
+            res.json(await dao.listSpacesByVenue(venue as string));
+        } else {
+            res.status(400).send(badRequestMessage);
+        }
     } catch (e) {
         res.status(500).send(serverErrorMessage);
     }
@@ -37,7 +43,12 @@ app.get("/spaces", async (req, res) => {
 app.get("/bookings", async (req, res) => {
     try {
         const {status, venue, date} = req.query;
-        res.json(await dao.listBookings({status, venue, date} as FilterBookingsRequest));
+        const request = {status, venue, date};
+        if (Validator.isValidBookingFilterRequest(request)) {
+            res.json(await dao.listBookings(request as FilterBookingsRequest));
+        } else {
+            res.status(400).send(badRequestMessage);
+        }
     } catch (e) {
         res.status(500).send(serverErrorMessage);
     }
