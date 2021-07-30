@@ -21,7 +21,7 @@ export class BookingDataDao {
     async listBookings(request: FilterBookingsRequest): Promise<Booking[]> {
         return (await this.listBookingsByVenue(request.venue))
             .filter(b => this.utils.stringEquals(b.status, (request.status || b.status)))
-            .filter(b => this.utils.dateEquals(b.date, request.date))
+            .filter(b => this.utils.dateEquals(b.date, (request.date || b.date)));
     }
 
     private async listBookingsByVenue(venue?: string): Promise<Booking[]> {
