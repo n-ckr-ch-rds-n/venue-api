@@ -7,23 +7,40 @@ import {Utils} from "./utils/utils";
 
 const app = express();
 const dao = new BookingDataDao(csv(), path.resolve(__dirname, "..", "data", "historical_data.csv"), new Utils());
+const serverErrorMessage = "Internal server error";
 
 app.get("/", async (req, res) => {
-    res.send("Booking data API");
+    try {
+        res.send("Booking data API. Try /venues, /spaces and /bookings");
+    } catch (e) {
+        res.status(500).send(serverErrorMessage);
+    }
 })
 
 app.get("/venues", async (req, res) => {
-    res.send(await dao.listVenues());
+    try {
+        res.json(await dao.listVenues());
+    } catch (e) {
+        res.status(500).send(serverErrorMessage);
+    }
 })
 
 app.get("/spaces", async (req, res) => {
-    const venue = req.query.venue ? req.query.venue.toString() : undefined;
-    res.send(await dao.listSpacesByVenue(venue));
+    try {
+        const venue = req.query.venue ? req.query.venue.toString() : undefined;
+        res.json(await dao.listSpacesByVenue(venue));
+    } catch (e) {
+        res.status(500).send(serverErrorMessage);
+    }
 })
 
 app.get("/bookings", async (req, res) => {
-    const {status, venue, date} = req.query;
-    res.send(await dao.listBookings({status, venue, date} as FilterBookingsRequest));
+    try {
+        const {status, venue, date} = req.query;
+        res.json(await dao.listBookings({status, venue, date} as FilterBookingsRequest));
+    } catch (e) {
+        res.status(500).send(serverErrorMessage);
+    }
 })
 
 
