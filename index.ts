@@ -11,7 +11,7 @@ const serverErrorMessage = "Internal server error";
 
 app.get("/", async (req, res) => {
     try {
-        res.send("Booking data API. Try /venues, /spaces and /bookings");
+        res.send("Booking data API. Try /venues, /spaces?venue={venue} or /bookings?status={status}&date={date}&venue={venue}");
     } catch (e) {
         res.status(500).send(serverErrorMessage);
     }
